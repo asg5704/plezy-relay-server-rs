@@ -1,0 +1,30 @@
+[package]
+name = "relay-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal", "time", "fs", "net", "sync", "io-util"] }
+axum = { version = "0.7", features = ["ws"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["trace", "limit"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["raw_value"] }
+serde_with = "3"
+sha2 = "0.10"
+subtle = "2"
+base64 = "0.22"
+rand = "0.8"
+ipnet = "2"
+governor = "0.6"
+nonzero_ext = "0.3"
+tokio-util = "0.7"
+clap = { version = "4", features = ["derive", "env"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+thiserror = "1"
+anyhow = "1"
+futures-util = "0.3"
+
+[dev-dependencies]
+tokio-tungstenite = "0.21"
