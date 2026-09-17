@@ -9,6 +9,6 @@ RUN touch src/main.rs && cargo build --release
 
 FROM scratch
 COPY --from=build /src/target/release/relay-rs /relay
-VOLUME /data
+# VOLUME /data
 EXPOSE 8080
 ENTRYPOINT ["/relay"]
