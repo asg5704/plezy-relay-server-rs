@@ -52,6 +52,7 @@ fn new_room(session_id: &str, host_peer_id: &str, host_token: &str) -> (RoomStat
         session_id.to_string(),
         host_peer_id.to_string(),
         verifier,
+        host_token.to_string(),
         "owner-ip".to_string(),
         host,
         SystemTime::now(),
@@ -88,7 +89,7 @@ fn reconnect_host_reannounces_previously_absent_host() {
     // absent, and evicts nothing (there was no live host connection to
     // replace).
     let (host2, _host2_rx) = admission("host1");
-    let effects = state.reconnect_host(host2, SystemTime::now());
+    let effects = state.reconnect_host(host2, token(1), SystemTime::now());
     let reply = effects.reply.expect("created reply");
     assert_eq!(reply.msg_type, server_type::CREATED);
     assert_eq!(reply.peers, Some(vec!["g1".to_string()]));
@@ -109,7 +110,7 @@ fn reconnect_host_while_still_connected_evicts_the_old_connection() {
     let (mut state, host_conn_id) = new_room("room1", "host1", &token(1));
 
     let (host2, _host2_rx) = admission("host1");
-    let effects = state.reconnect_host(host2, SystemTime::now());
+    let effects = state.reconnect_host(host2, token(1), SystemTime::now());
     assert_eq!(effects.reply.unwrap().msg_type, server_type::CREATED);
     // The host never left, so no peerJoined re-announcement...
     assert!(effects.broadcast.is_empty());
@@ -262,7 +263,7 @@ fn transfer_host_moves_authority_and_rebroadcasts_eligibility() {
     let (host, _host_rx) = capable_admission("host1", 5);
     let verifier = Verifier::from_token(&token(1)).unwrap();
     let (mut state, effects) =
-        RoomState::new_room("room1".to_string(), "host1".to_string(), verifier, "owner-ip".to_string(), host, SystemTime::now());
+        RoomState::new_room("room1".to_string(), "host1".to_string(), verifier, token(1), "owner-ip".to_string(), host, SystemTime::now());
     let host_conn_id = effects.assigned_conn_id.unwrap();
 
     let (g1, _g1_rx) = capable_admission("g1", 5);

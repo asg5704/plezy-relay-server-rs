@@ -140,6 +140,9 @@ async fn create_join_broadcast_sendto_leave_end_session_flow() {
     let created = recv_json(&mut host).await;
     assert_eq!(created["type"], "created");
     assert_eq!(created["hostPeerId"], "host1");
+    // The Plezy client rejects a `created` reply that doesn't echo back
+    // the reconnectToken it presented (see watch_together_peer_service.dart).
+    assert_eq!(created["reconnectToken"], host_token);
 
     let mut guest = connect(&server).await;
     let guest_token = token(2);

@@ -121,7 +121,7 @@ pub struct Admission {
 }
 
 impl RoomState {
-    pub fn new_room(session_id: String, host_peer_id: String, host_verifier: Verifier, owner_ip_key: String, host: Admission, now: SystemTime) -> (Self, Effects) {
+    pub fn new_room(session_id: String, host_peer_id: String, host_verifier: Verifier, reconnect_token: String, owner_ip_key: String, host: Admission, now: SystemTime) -> (Self, Effects) {
         let conn_id = 1;
         let cancel = CancellationToken::new();
         let mut peers = HashMap::new();
@@ -152,6 +152,7 @@ impl RoomState {
                 msg_type: server_type::CREATED.to_string(),
                 session_id: Some(session_id),
                 host_peer_id: Some(host_peer_id),
+                reconnect_token: Some(reconnect_token),
                 protocol_version: protocol::RELAY_PROTOCOL_VERSION,
                 features: Some(relay_features()),
                 ..Default::default()
@@ -200,7 +201,7 @@ impl RoomState {
     /// verifier. Admits this connection as host, replacing any prior live
     /// connection under that peerId. No quota/registry changes — the room
     /// already exists.
-    pub fn reconnect_host(&mut self, host: Admission, _now: SystemTime) -> Effects {
+    pub fn reconnect_host(&mut self, host: Admission, reconnect_token: String, _now: SystemTime) -> Effects {
         let was_absent = !self.peers.contains_key(&self.host_peer_id);
         let host_peer_id = self.host_peer_id.clone();
         let (conn_id, cancel, old) = self.admit(host_peer_id, host);
@@ -212,6 +213,7 @@ impl RoomState {
                 msg_type: server_type::CREATED.to_string(),
                 session_id: Some(self.session_id.clone()),
                 host_peer_id: Some(self.host_peer_id.clone()),
+                reconnect_token: Some(reconnect_token),
                 protocol_version: protocol::RELAY_PROTOCOL_VERSION,
                 peers: Some(existing_peers),
                 features: Some(relay_features()),

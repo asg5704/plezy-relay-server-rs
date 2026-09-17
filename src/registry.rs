@@ -129,7 +129,7 @@ impl Registry {
             };
             if idempotent {
                 let mut state = existing.state.lock().await;
-                let effects = state.reconnect_host(admission, SystemTime::now());
+                let effects = state.reconnect_host(admission, presented_token.to_string(), SystemTime::now());
                 drop(state);
                 drop(rooms);
                 self.snapshot.record_mutation();
@@ -161,6 +161,7 @@ impl Registry {
             session_id.to_string(),
             host_peer_id.to_string(),
             host_verifier,
+            presented_token.to_string(),
             owner_ip_key.to_string(),
             admission,
             SystemTime::now(),
