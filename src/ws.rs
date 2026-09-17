@@ -1,4 +1,4 @@
-//! Axum `GET /ws` handler: resolves the client IP, runs pre-upgrade
+//! Axum `GET /relay` handler: resolves the client IP, runs pre-upgrade
 //! admission (global/per-IP connection caps, connect-attempt rate
 //! limiter), then hands off to `connection::run`.
 

@@ -68,7 +68,7 @@ async fn main() -> anyhow::Result<()> {
     tokio::spawn(cleanup::run(app.clone()));
 
     let router = Router::new()
-        .route("/ws", get(ws::ws_handler))
+        .route("/relay", get(ws::ws_handler))
         .route("/logs", post(logs::post_logs).route_layer(RequestBodyLimitLayer::new(MAX_LOG_SIZE)))
         .route("/logs/:id", get(logs::get_logs))
         .route("/health", get(logs::health))

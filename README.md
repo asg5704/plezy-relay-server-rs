@@ -117,7 +117,7 @@ bound. Implemented in this session:
       `Registry::new(snapshot_handle)` + `registry.restore(restored)`.
 - [x] Construct `AppState { registry, logs, client_ip, connections,
       connect_limiter, snapshot }` (fields already defined in `lib.rs`).
-- [x] Build the `axum::Router`: `GET /ws` → `ws::ws_handler`, `POST /logs`
+- [x] Build the `axum::Router`: `GET /relay` → `ws::ws_handler`, `POST /logs`
       and `GET /logs/:id` → handlers already written in `logs.rs`
       (`post_logs`, `get_logs`), `GET /health` → `logs::health`. Apply
       `tower_http` body-size limit on `POST /logs`.

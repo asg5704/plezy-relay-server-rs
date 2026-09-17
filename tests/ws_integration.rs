@@ -52,7 +52,7 @@ struct TestServer {
 
 impl TestServer {
     fn ws_url(&self) -> String {
-        format!("ws://{}/ws", self.addr)
+        format!("ws://{}/relay", self.addr)
     }
 }
 
@@ -79,7 +79,7 @@ async fn spawn_server() -> TestServer {
     };
 
     let router = Router::new()
-        .route("/ws", get(ws::ws_handler))
+        .route("/relay", get(ws::ws_handler))
         .route("/logs", post(logs::post_logs).route_layer(RequestBodyLimitLayer::new(MAX_LOG_SIZE)))
         .route("/logs/:id", get(logs::get_logs))
         .route("/health", get(logs::health))
